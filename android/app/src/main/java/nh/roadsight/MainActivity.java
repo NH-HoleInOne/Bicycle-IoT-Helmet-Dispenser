@@ -19,13 +19,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
+import nh.roadsight.manager.MyCameraManager;
+
+// TODO : Camera permission
 public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback2, SensorEventListener {
 
+    private static final String TAG = "-tag-main";
+
+    /*
+    //dataBinding
+    ActivityMainBinding binding;
+    */
+    //Camera Variables
+    SurfaceView mSurfaceView;
+    SurfaceHolder mSurfaceHolder;
     //Layout Variables
     private TextView mtLongitude;
     private TextView mtLatitude;
@@ -46,13 +59,18 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private float mY;
     private float mZ;
     private static final int mShakeThreshold = 600;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mtLongitude = (TextView) findViewById(R.id.longitude);
         mtLatitude = (TextView) findViewById(R.id.latitude);
         mtSpeed = (TextView) findViewById(R.id.speed);
+        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        mSurfaceHolder = mSurfaceView.getHolder();
+        mSurfaceHolder.addCallback(this);
 
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer=mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -140,6 +158,20 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        MyCameraManager.open(mSurfaceView);
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyCameraManager.close();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER)
         {
@@ -199,18 +231,15 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
     }
 
     @Override
     public void surfaceRedrawNeeded(SurfaceHolder surfaceHolder) {
-
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
     }
 
     /*
