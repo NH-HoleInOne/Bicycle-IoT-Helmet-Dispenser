@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,7 @@ import java.util.List;
 import nh.roadsight.manager.MyCameraManager;
 
 // TODO : Camera permission
-public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback2, SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private static final String TAG = "-tag-main";
 
@@ -36,13 +37,13 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     //dataBinding
     ActivityMainBinding binding;
     */
-    //Camera Variables
-    SurfaceView mSurfaceView;
-    SurfaceHolder mSurfaceHolder;
+    //Permission and Request CODE
+    public static final int REQUEST_CODE_CAMERA = 1;
     //Layout Variables
     private TextView mtLongitude;
     private TextView mtLatitude;
     private TextView mtSpeed;
+    private SurfaceView mSurfaceView;
     //GPS Variables
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
@@ -68,12 +69,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mtLongitude = (TextView) findViewById(R.id.longitude);
         mtLatitude = (TextView) findViewById(R.id.latitude);
         mtSpeed = (TextView) findViewById(R.id.speed);
-        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-        mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(this);
+        mSurfaceView = findViewById(R.id.surfaceView);
 
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        mAccelerometer=mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSurfaceView.getHolder().addCallback(MyCameraManager.getCameraSurfaceHolderCallback());
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         GPSPermissionCheckOver23();
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -143,8 +144,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 });
             }
         }
-        
+
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     @Override
     protected void onStart() {
         super.onStart();
-        MyCameraManager.open(mSurfaceView);
+        MyCameraManager.open(this, mSurfaceView);
         Log.d(TAG, "onStart");
     }
 
@@ -173,19 +175,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER)
-        {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float X = event.values[0];
             float Y = event.values[0];
             float Z = event.values[0];
             long CurrentTime = System.currentTimeMillis();
             long GapOfTime = CurrentTime - mLastTime;
-            if(GapOfTime > 100)
-            {
+            if (GapOfTime > 100) {
                 mLastTime = CurrentTime;
-                float Speed = Math.abs(X+Y+Z-mX-mY-mZ)/GapOfTime*10000;
-                if(Speed > mShakeThreshold)
-                {
+                float Speed = Math.abs(X + Y + Z - mX - mY - mZ) / GapOfTime * 10000;
+                if (Speed > mShakeThreshold) {
                     //이벤트 처리하는 부분 넣을것.
                     Toast.makeText(getApplicationContext(), "Shake 발생", Toast.LENGTH_SHORT).show();
                 }
@@ -227,27 +226,25 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_CAMERA: {
+                for(int i=0; i<permissions.length; i++){
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if(permission.equals(Manifest.permission.CAMERA)){
+                        if(grantResult == PackageManager.PERMISSION_GRANTED){
+                            Log.d(TAG, "permission granted");
+                            MyCameraManager.open(this, mSurfaceView);
+                        } else {
+                            Log.d(TAG, "permission denied");
+                            finish();
+                        }
+                    }
+                }
+            }
+            // case REQUEST_CODE_SOMETHING
+        }
     }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-    }
-
-    @Override
-    public void surfaceRedrawNeeded(SurfaceHolder surfaceHolder) {
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-    }
-
-    /*
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-    }
-    @Override
-    public void surfaceRedrawNeededAsync(SurfaceHolder holder, Runnable drawingFinished) {
-    }
-    */
 }
