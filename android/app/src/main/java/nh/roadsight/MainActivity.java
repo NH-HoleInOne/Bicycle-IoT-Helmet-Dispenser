@@ -1,6 +1,7 @@
 package nh.roadsight;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +42,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     */
     //Permission and Request CODE
     public static final int REQUEST_CODE_CAMERA = 1;
+    public static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2;
     //Layout Variables
     private TextView mtLongitude;
     private TextView mtLatitude;
     private TextView mtSpeed;
     private SurfaceView mSurfaceView;
+    public Button mButton;
     //GPS Variables
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
@@ -70,8 +75,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mtLatitude = (TextView) findViewById(R.id.latitude);
         mtSpeed = (TextView) findViewById(R.id.speed);
         mSurfaceView = findViewById(R.id.surfaceView);
+        mButton = findViewById(R.id.button);
 
         mSurfaceView.getHolder().addCallback(MyCameraManager.getCameraSurfaceHolderCallback());
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int writePermissionState = ActivityCompat.checkSelfPermission(view.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (writePermissionState == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions((Activity) view.getContext(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    MyCameraManager.startRecord(((Activity) view.getContext()), mSurfaceView.getHolder());
+                }
+            }
+        });
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -229,22 +247,36 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
+            // TODO : 매커니즘이 너무 불편함. 바꿔야될 필요성이 있음.
             case REQUEST_CODE_CAMERA: {
-                for(int i=0; i<permissions.length; i++){
+                for (int i = 0; i < permissions.length; i++) {
                     String permission = permissions[i];
                     int grantResult = grantResults[i];
-                    if(permission.equals(Manifest.permission.CAMERA)){
-                        if(grantResult == PackageManager.PERMISSION_GRANTED){
-                            Log.d(TAG, "permission granted");
+                    if (permission.equals(Manifest.permission.CAMERA)) {
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d(TAG, "permission granted, camera");
                             MyCameraManager.open(this, mSurfaceView);
                         } else {
-                            Log.d(TAG, "permission denied");
+                            Log.d(TAG, "permission denied, camera");
                             finish();
                         }
                     }
                 }
             }
-            // case REQUEST_CODE_SOMETHING
+            case REQUEST_CODE_WRITE_EXTERNAL_STORAGE: {
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d(TAG, "permission granted, external storage");
+                            MyCameraManager.startRecord(this, mSurfaceView.getHolder());
+                        } else {
+                            Log.d(TAG, "permission denied, external storage");
+                        }
+                    }
+                }
+            }
         }
     }
 }
