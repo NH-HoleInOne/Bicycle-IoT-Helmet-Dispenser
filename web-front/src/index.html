@@ -1,0 +1,87 @@
+<!--
+    해야할 것들
+        1. 초록색버튼, 빨간색 버튼 img 클릭하게 만들고 클릭시 함수 발생 (함수가안댐 ㅠㅠ)
+            을 통해 vue data 변경 해보기
+        2. css 변화를 주기 - 카톡
+        3. responsible image map 사용하기?
+-->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
+</head>
+<body>
+
+    <div id="header" class="box">
+        <p>
+            공공자전거 헬멧 현황 알리미
+        </p>
+    </div>
+
+    <div id="app" class="fillParent">
+        <div id="Map" class="mapContents" @click = "clickMap()">
+            <img class="mapimage" src="resource/따릉이지도.png" usemap="locationSelector">
+                <map name="locationSelector">
+                    <area shape="rect" coords="0, 0, 200, 200" @click="location = '뜨든?? 왼쪼옥', numBike=5, numUsedHelemt=3;">
+                    <area shape="rect" coords="200, 200, 1000, 1000" @click="location = '오른쪽아래??'; numBike=10; numUsedHelemt=6;">
+                </map>
+        </div>
+
+        <div id='app-status-container' class='mapContents'>
+            <div id="PresentCondition" class="box" v-if="location!=''">
+                <span id="location">{{location}}</span>의 현황
+            </div>
+            <div id="PresentCondition" class="box" v-else>
+                지도에서 공공자전거 대여소를 클릭해주세요.
+            </div>
+
+            <div id="NumOfBycicles" class="box">
+                <span v-if="numbBike">자전거 개수 : {{numBike}}</span>
+                <span v-else>자전거의 개수가 표시됩니다.</span>
+            </div>
+
+            <div id="NumOfUsedHelmets" class="box">
+                <span v-if="numbBike">사용한 헬멧 개수 : {{numUsedHelemt}}</span>
+                <span v-else>사용한 헬멧의 총 개수가 표시됩니다.</span>
+            </div>
+        </div>
+
+        <div id="Cycles" class="box">
+            <div class="contents" v-for="n in new Array(50)">
+                <ul>
+                    <li>
+                        <img src="https://www.cyclegear.com/_a/product_images/0232/2002/bilt_techno20_helmet.jpg" width="30px" height="30px">
+                    </li>
+                    <li>
+                        <img src="http://love.seoul.go.kr/Pds/Board/seoul_news_write/Editor/201804_34_7.jpg" width="30px" height="30px">
+                    </li>
+                    <li>{{data}}개!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div id="footer-image">
+            <img src="resource/해커톤대회 1.png" height=43px><br>
+            <img src="resource/해커톤대회 2.png" height=56px><br>
+        </div>
+        <div id="footer-text">
+            <a href='http://www.namyangjuhackathon.kr/' target='_blank' style="color:white;">2018 Namyangju hackathon</a> at Organic Theme Park <br> <br>
+            Written by Team Hole in one - [Project Name]
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
