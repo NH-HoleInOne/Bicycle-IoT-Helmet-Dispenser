@@ -23,16 +23,16 @@
 
     <div id="header" class="box">
         <p>
-            공공자전거 헬멧 현황 알리미
+            공공자전거 <span class="yellow">헬멧</span> 현황 알리미
         </p>
     </div>
 
     <div id="app" class="fillParent">
-        <div id="Map" class="mapContents" @click = "clickMap()">
+        <div id="Map" class="mapContents"> <!--@click = "clickMap()-->
             <img class="mapimage" src="resource/따릉이지도.png" usemap="locationSelector">
                 <map name="locationSelector">
-                    <area shape="rect" coords="0, 0, 200, 200" @click="location = '뜨든?? 왼쪼옥', numBike=5, numUsedHelemt=3;">
-                    <area shape="rect" coords="200, 200, 1000, 1000" @click="location = '오른쪽아래??'; numBike=10; numUsedHelemt=6;">
+                    <area shape="rect" coords="0, 0, 200, 200" v-on:click="numBike = 8">
+                    <area shape="rect" coords="200, 200, 1000, 1000" @click="location = '오른쪽아래??'">
                 </map>
         </div>
 
@@ -56,7 +56,7 @@
         </div>
 
         <div id="Cycles" class="box">
-            <div class="contents" v-for="n in new Array(50)">
+            <div class="contents" v-for="n in numBike">
                 <ul>
                     <li>
                         <img src="https://www.cyclegear.com/_a/product_images/0232/2002/bilt_techno20_helmet.jpg" width="30px" height="30px">
