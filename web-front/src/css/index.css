@@ -23,7 +23,7 @@ body{
     height: 50%;
     white-space: nowrap;
 }
-#header {float: left; width: 100%; height: 200px; outline: 1px solid red; background-image: url("resource/title-theme.svg");
+#header {float: left; width: 100%; height: 160px; outline: 1px solid red; background-image: url("../resource/title-theme.svg");
     background-position: bottom right;
     display:flex;
 }
@@ -31,10 +31,11 @@ body{
 #header p {
     font-size: 2em;
     text-align: center;
+    font-weight: 600;
     color: white;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 0.5em;
-    padding: 0.75em;
+    padding: 0.5em;
     padding-left: 1.5em;
     padding-right: 1.5em;
     box-shadow: 1px 2px 2px 0px rgba(40,40,40,0.3);
@@ -56,7 +57,7 @@ body{
 }
 
 .yellow{
-    color: #f0ff78;
+    color: rgb(240, 240, 20);
 }
 
 
@@ -81,7 +82,8 @@ span#location {
     float: left; 
     width: 100%; 
     height: fit-content; 
-    background-color: rgb(27, 102, 172);
+    background: linear-gradient(to bottom right, rgb(87, 150, 200), rgb(15, 90, 160));
+    /* background-color: rgb(27, 102, 172); */
     color: white;
     padding: 30px;
     box-sizing: border-box;

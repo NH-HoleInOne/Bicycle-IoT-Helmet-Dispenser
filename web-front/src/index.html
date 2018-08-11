@@ -16,8 +16,8 @@
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://unpkg.com/vue"></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
+    <script src="js/vue.js"></script><script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=FYFhRnwytL_GPyfrX0G7"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/index.css" />
 </head>
 <body>
 
@@ -28,13 +28,17 @@
     </div>
 
     <div id="app" class="fillParent">
-        <div id="Map" class="mapContents"> <!--@click = "clickMap()-->
-            <img class="mapimage" src="resource/따릉이지도.png" usemap="locationSelector">
+        
+        <div id="Map"></div>
+
+        <!--@click = "clickMap()-->
+        <!-- <div id="Map" class="mapContents">
+            <img class="mapimage" src="resource/bike-map.png" usemap="locationSelector">
                 <map name="locationSelector">
-                    <area shape="rect" coords="0, 0, 200, 200" v-on:click="numBike = 8">
-                    <area shape="rect" coords="200, 200, 1000, 1000" @click="location = '오른쪽아래??'">
+                    <area shape="rect" coords="0, 0, 200, 200" v-on:click="clickMap(1)">
+                    <area shape="rect" coords="200, 200, 1000, 1000" @click="clickMap(2)">
                 </map>
-        </div>
+        </div> -->
 
         <div id='app-status-container' class='mapContents'>
             <div id="PresentCondition" class="box" v-if="location!=''">
@@ -45,13 +49,13 @@
             </div>
 
             <div id="NumOfBycicles" class="box">
-                <span v-if="numbBike">자전거 개수 : {{numBike}}</span>
-                <span v-else>자전거의 개수가 표시됩니다.</span>
+                <span v-show="Number.isInteger(numBike)">자전거 개수 : {{numBike}}</span>
+                <span v-show="!Number.isInteger(numBike)">자전거의 개수가 표시됩니다.</span>
             </div>
 
             <div id="NumOfUsedHelmets" class="box">
-                <span v-if="numbBike">사용한 헬멧 개수 : {{numUsedHelemt}}</span>
-                <span v-else>사용한 헬멧의 총 개수가 표시됩니다.</span>
+                <span v-show="Number.isInteger(numUsedHelemt)">사용한 헬멧 개수 : {{numUsedHelemt}}</span>
+                <span v-show="!Number.isInteger(numUsedHelemt)">사용한 헬멧의 총 개수가 표시됩니다.</span>
             </div>
         </div>
 
@@ -72,16 +76,18 @@
 
     <div id="footer">
         <div id="footer-image">
-            <img src="resource/해커톤대회 1.png" height=43px><br>
-            <img src="resource/해커톤대회 2.png" height=56px><br>
+            <img src="resource/hackathon1.png" height=43px><br>
+            <img src="resource/hackathon2.png" height=56px><br>
         </div>
         <div id="footer-text">
-            <a href='http://www.namyangjuhackathon.kr/' target='_blank' style="color:white;">2018 Namyangju hackathon</a> at Organic Theme Park <br> <br>
-            Written by Team Hole in one - [Project Name]
+            <a href='http://www.namyangjuhackathon.kr/' target='_blank' class="yellow">2018 Namyangju hackathon</a> at Organic Theme Park <br>
+            Written by Team Hole in one - [Project Name] <br>
+            2018. 08. 11 ~ 08. 12
         </div>
     </div>
 
-    <script src="index.js"></script>
+    <script src="js/index.js"></script>
+    <script src='js/navermap.js'></script>
 </body>
 
 </html>
