@@ -14,6 +14,7 @@ http.createServer((request, response) => {
         '/js/index.js',
         '/js/vue.js',
         '/js/navermap.js',
+        '/js/jquery-1.9.1.js',
 
         '/index.html',
         '/navermap.html',
@@ -22,7 +23,18 @@ http.createServer((request, response) => {
         '/resource/bike-map.png',
         '/resource/hackathon1.png',
         '/resource/hackathon2.png',
+        '/resource/red-mark.png',
+        '/resource/yellow-mark.png',
+        '/resource/blue-mark.png',
+        
         '/resource/title-theme.svg',
+        '/resource/alcohol.svg',
+        '/resource/helmetStorage.svg',
+
+        '/resource/helmet_green.png',
+        '/resource/helmet_red.png',
+        '/resource/protein.png',
+        '/resource/bad-helmet-icon.jpg'
     ];
 
     if (request.method === 'GET') { // GET 요청이면
@@ -32,7 +44,7 @@ http.createServer((request, response) => {
                 if (err) {
                     return console.error(err);
                 } else {
-                    console.log('access : ' + __dirname + '/index.html');
+                    console.log('access : ' + '/index.html');
                 }
                 response.end(data, 'utf-8');
             });
@@ -49,7 +61,7 @@ http.createServer((request, response) => {
                 if (err) {
                     return console.error(err);
                 } else {
-                    console.log('access : ' + __dirname + '/index.html');
+                    console.log('access : ' + path);
                 }
                 response.end(data, 'utf-8');
             });

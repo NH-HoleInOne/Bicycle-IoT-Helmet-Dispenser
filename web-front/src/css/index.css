@@ -14,24 +14,26 @@ body{
     height: 100%;
     margin-left: auto;
     margin-right: auto;
+    background: rgb(230, 230, 230);
+    margin-top: 0px;
 }
 .fillParent{
     width: 100%;
-    height: 100%;
+    height: 112%;
 }
-.mapContents{
+.upper-contents{
     height: 50%;
     white-space: nowrap;
 }
-#header {float: left; width: 100%; height: 160px; outline: 1px solid red; background-image: url("../resource/title-theme.svg");
+#header {float: left; width: 100%; height: 160px; background-image: url("../resource/title-theme.svg");
     background-position: bottom right;
     display:flex;
+    padding:0px;
 }
 
 #header p {
     font-size: 2em;
     text-align: center;
-    font-weight: 600;
     color: white;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 0.5em;
@@ -43,11 +45,21 @@ body{
     display:table-cell;
     margin: auto;
 }
+.heavy-font {
+    font-weight: 600;
+}
 
 #app {
-    background: linear-gradient(to bottom right, rgb(255, 255, 255), rgb(240, 245, 248));
+    background: white;
+    flex-direction: column;
+    display: flex;
 }
-#Map {float: left; width: 65%; min-width: fit-content; min-height: 400px; outline: 1px solid olive;}
+#Map {float: left; width: 65%; min-width: fit-content;
+    overflow : hidden;
+    min-height: 500px;  
+    box-shadow: 2px 4px 4px 2px rgba(40,40,40,0.3);
+    margin: 40px;
+}
 .mapimage
 {
     max-height: 100%;
@@ -55,27 +67,49 @@ body{
     margin-right: auto;
     display: block;
 }
+.menu
+{   
+    float: right;
+    overflow: hidden;
+}
+
+.entry
+{
+    background-size: 50%;
+    height:155px;
+    background-repeat: no-repeat;
+    background-image: url('/resource/protein.png');
+    background-position: center;
+}
 
 .yellow{
     color: rgb(240, 240, 20);
 }
 
-
-
-#PresentCondition {float: left; width: 35%; height: 50%; min-height:200px; outline: 1px solid fuchsia;}
+#PresentCondition {float: left; width: 25%; height: 50%; }
 #NumOfBycicles {float: left; width: 35%; height: 25%; min-height:100px; outline: 1px solid maroon;}
 #NumOfUsedHelmets {float: left; width: 35%; height: 25%; min-height:100px; outline: 1px solid blue;}
 
-
-#Cycles {float: left; width: 100%; height: fit-content; outline: 1px solid red; overflow:auto; white-space: nowrap;}
-.contents{
-    display: inline-block;
-}
 
 span#location {
     font-size: 1.5em;
 }
 
+#bad-helmet-detail{float: left; width: 25%; height: 50%; display:flex;}
+#bad-helmet-div{
+}
+/* #Cycles {float: left; width: 100%; height: fit-content; outline: 1px solid red; overflow:auto; white-space: nowrap;} */
+.contents{
+    display: inline-block;
+    /*background:linear-gradient(to right bottom, rgb(0,0,0), rgb(0,0,0));
+    outline: 1px solid black;*/
+    box-shadow: 2px 2px 2px 2px rgba(40,40,40,0.3);
+    padding: 5px;
+    margin: 5px;
+    height:80px;
+    font-weight:bolder;
+    font-size: 30px;
+}
 
 
 #footer {
@@ -100,3 +134,9 @@ span#location {
     transform: translateY(20px);
     vertical-align: middle;
 }
+
+
+/* map */
+.search { position:absolute;z-index:1000;top:20px;left:20px; }
+.search #address { width:150px;height:20px;line-height:20px;border:solid 1px #555;padding:5px;font-size:12px;box-sizing:content-box; }
+.search #submit { height:30px;line-height:30px;padding:0 10px;font-size:12px;border:solid 1px #555;border-radius:3px;cursor:pointer;box-sizing:content-box; }

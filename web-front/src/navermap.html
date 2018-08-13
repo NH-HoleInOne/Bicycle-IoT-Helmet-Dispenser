@@ -1,14 +1,93 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <meta charset="UTF-8">
-      <title>간단한 지도 표시하기</title>
-      <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=FYFhRnwytL_GPyfrX0G7"></script>
-  </head>
-  <body>
-    <div id="Map" style="width:500px;height:600px;"></div>
-    <script src='js/navermap.js'></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="js/jquery-1.9.1.js"></script>
+  <!--  <script type="text/javascript" src="../../js/examples-base.js"></script>-->
+    <!--<script type="text/javascript" src="../../js/highlight.min.js"></script>-->
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=FYFhRnwytL_GPyfrX0G7&amp;submodules=geocoder"></script>
+    <link rel="stylesheet" type="text/css" href="../../examples-base.css" />
+</head>
+<body>
 
-  
+<!-- @category Geocoder -->
+
+<style type="text/css">
+.search { position:absolute;z-index:1000;top:20px;left:20px; }
+.search #address { width:150px;height:20px;line-height:20px;border:solid 1px #555;padding:5px;font-size:12px;box-sizing:content-box; }
+.search #submit { height:30px;line-height:30px;padding:0 10px;font-size:12px;border:solid 1px #555;border-radius:3px;cursor:pointer;box-sizing:content-box; }
+</style>
+
+<div id="wrap" class="section">
+    
+</div>
+
+<script>
+var map = new naver.maps.Map("map", {
+    center: new naver.maps.LatLng('37.634635, 127.207642'),
+    zoom: 10, //기본줌
+	minZoom: 2, //최소줌 
+	zoomControl: true,//줌 조절 바 
+    zoomControlOptions: // 줌 옵션 
+        { //줌 컨트롤의 옵션
+        position: naver.maps.Position.TOP_RIGHT
+        }
+});
+var infoWindow = new naver.maps.InfoWindow({
+    anchorSkew: true
+});
+map.setCursor('pointer');
+// search by tm128 coordinate
+function searchCoordinateToAddress(latlng) {
+    var tm128 = naver.maps.TransCoord.fromLatLngToTM128(latlng);
+    infoWindow.close();
+    naver.maps.Service.reverseGeocode({
+        location: tm128,
+        coordType: naver.maps.Service.CoordType.TM128
+    }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+            return alert('Something Wrong!');
+        }
+        var items = response.result.items,
+            htmlAddresses = [];
+
+       
+    });
+}
+// result by latlng coordinate
+function searchAddressToCoordinate(address) {
+    naver.maps.Service.geocode({
+        address: address
+    }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+            return alert('Something Wrong!');
+        }
+        var item = response.result.items[0],
+            point = new naver.maps.Point(item.point.x, item.point.y);
+   
+        map.setCenter(point);
+    });
+}
+function initGeocoder() {
+    map.addListener('click', function(e) {
+        searchCoordinateToAddress(e.coord);
+    });
+    $('#address').on('keydown', function(e) {
+        var keyCode = e.which;
+        if (keyCode === 13) { // Enter Key
+            searchAddressToCoordinate($('#address').val());
+        }
+    });
+    $('#submit').on('click', function(e) {
+        e.preventDefault();
+        searchAddressToCoordinate($('#address').val());
+    });
+    searchAddressToCoordinate('서울');
+}
+naver.maps.onJSContentLoaded = initGeocoder;
+</script>
+
+</body>
+</html>
